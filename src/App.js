@@ -21,6 +21,8 @@ const App = () => {
    // This state is the source of truth for the data inside the app. You won't be needing dummyData anymore.
    // To make the search bar work (which is stretch) we'd need another state to hold the search term.
 
+   const [search, setSearch] = useState("");
+
    const likePost = (postId) => {
       /*
       This function serves the purpose of increasing the number of likes by one, of the post with a given id.
@@ -42,19 +44,31 @@ const App = () => {
       //    }
       // }
       // setDummyData(newobj);
+      // console.log(dummyData[postId - 1]);
 
-      setDummyData(
-         dummyData.map((i) =>
-            i.id === postId ? { ...i, likes: i.likes + 1 } : i
-         )
-      );
+      // a little hack to save some queries. We can assume that nth entry in the data object has postId n as well so we can directly query the array index like so.
+      if (dummyData[postId - 1].liked) {
+         setDummyData(
+            dummyData.map((i) =>
+               i.id === postId ? { ...i, likes: i.likes - 1 } : i
+            )
+         );
+         dummyData[postId - 1].liked = false;
+      } else {
+         dummyData[postId - 1].liked = true;
+         setDummyData(
+            dummyData.map((i) =>
+               i.id === postId ? { ...i, likes: i.likes + 1 } : i
+            )
+         );
+      }
    };
 
    return (
       <div className="App">
          {/* <h1> test </h1> */}
-         <SearchBar></SearchBar>
-         <Posts posts={dummyData} likePost={likePost}></Posts>
+         <SearchBar setSearch={setSearch}></SearchBar>
+         <Posts posts={dummyData} likePost={likePost} search={search}></Posts>
          {/* Add SearchBar and Posts here to render them */}
          {/* Check the implementation of each component, to see what props they require, if any! */}
       </div>
