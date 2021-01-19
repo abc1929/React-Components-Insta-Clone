@@ -48,12 +48,12 @@ const App = () => {
 
       // a little hack to save some queries. We can assume that nth entry in the data object has postId n as well so we can directly query the array index like so.
       if (dummyData[postId - 1].liked) {
+         dummyData[postId - 1].liked = false;
          setDummyData(
             dummyData.map((i) =>
                i.id === postId ? { ...i, likes: i.likes - 1 } : i
             )
          );
-         dummyData[postId - 1].liked = false;
       } else {
          dummyData[postId - 1].liked = true;
          setDummyData(
